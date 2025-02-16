@@ -1,10 +1,34 @@
 import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Landing from './pages/Landing';
+import Home from './pages/Home';
+import CreateEvent from './pages/CreateEvent';
+import MyTickets from './pages/MyTickets';
+import EventDetails from './pages/EventDetails';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <p>Frontend goes here Bitches</p>
-    </div>
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route
+        path="/*"
+        element={
+          <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-blue-900 dark:to-gray-900 transition-colors">
+            <Navbar />
+            <main className="container mx-auto px-4 py-8">
+              <Routes>
+                <Route path="/events" element={<Home />} />
+                <Route path="/create" element={<CreateEvent />} />
+                <Route path="/my-tickets" element={<MyTickets />} />
+                <Route path="/event/:id" element={<EventDetails />} />
+                <Route path="*" element={<Navigate to="/events" replace />} />
+              </Routes>
+            </main>
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 
