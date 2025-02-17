@@ -1,31 +1,10 @@
 import React from 'react';
 import { Calendar, MapPin, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEvents } from '../hooks/useEvents';
 
 function Home() {
-  // Mock data - will be replaced with contract data
-  const events = [
-    {
-      id: 1,
-      name: "ETH Global London 2025",
-      date: "2025-03-15",
-      location: "London, UK",
-      price: "0.1",
-      available: 150,
-      maxSupply: 500,
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1000"
-    },
-    {
-      id: 2,
-      name: "Web3 Summit Berlin",
-      date: "2025-04-20",
-      location: "Berlin, Germany",
-      price: "0.05",
-      available: 200,
-      maxSupply: 1000,
-      image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=1000"
-    }
-  ];
+  const { events } = useEvents();
 
   return (
     <div className="space-y-8">
@@ -97,4 +76,4 @@ function Home() {
   );
 }
 
-export default Home
+export default Home;
