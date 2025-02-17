@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, MapPin, Image, Ticket as TicketIcon, Info, Users } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { useEvents } from '../hooks/useEvents';
 
 function CreateEvent() {
+  const navigate = useNavigate();
+  const { addEvent } = useEvents();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     date: '',
@@ -13,10 +19,37 @@ function CreateEvent() {
     image: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Contract interaction will be added here
-    console.log('Form submitted:', formData);
+    
+    if (isSubmitting) {
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const toastId = toast.loading('Creating event...');
+      
+      // Add the event to our events context
+      addEvent({
+        name: formData.name,
+        date: formData.date,
+        time: formData.time,
+        location: formData.location,
+        description: formData.description,
+        price: formData.price,
+        maxSupply: Number(formData.maxSupply),
+        image: formData.image
+      });
+      
+      toast.success('Event created successfully!', { id: toastId });
+      navigate('/events');
+    } catch (error) {
+      console.error('Error creating event:', error);
+      toast.error('Failed to create event. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -157,9 +190,12 @@ function CreateEvent() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+            disabled={isSubmitting}
+            className={`w-full ${
+              isSubmitting ? 'bg-blue-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+            } text-white font-medium py-3 px-4 rounded-lg transition-colors`}
           >
-            Create Event
+            {isSubmitting ? 'Creating Event...' : 'Create Event'}
           </button>
         </form>
       </div>

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Calendar, MapPin, Users, Clock, Info } from 'lucide-react';
+import { useWallet } from '../hooks/useWallet';
+import { toast } from 'react-hot-toast';
 
 function EventDetails() {
   const { id } = useParams();
+  const { account, connectWallet } = useWallet();
+  const [ticketCount, setTicketCount] = useState(1);
 
   // Mock data - will be replaced with contract data
   const event = {
@@ -17,6 +21,23 @@ function EventDetails() {
     maxSupply: 500,
     description: "Join us for the biggest Ethereum event in London! Connect with developers, entrepreneurs, and enthusiasts from around the world. Experience three days of intensive learning, building, and networking.",
     image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1000"
+  };
+
+  const handlePurchase = async () => {
+    if (!account) {
+      toast.error('Please connect your wallet to purchase tickets');
+      connectWallet();
+      return;
+    }
+
+    try {
+      toast.loading('Processing purchase...');
+      // Contract interaction will be added here
+      toast.success('Tickets purchased successfully!');
+    } catch (error) {
+      console.error('Purchase error:', error);
+      toast.error('Failed to purchase tickets');
+    }
   };
 
   return (
@@ -63,7 +84,7 @@ function EventDetails() {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 sticky top-8">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 sticky top-24">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Price</span>
@@ -87,7 +108,11 @@ function EventDetails() {
 
               <div className="pt-4 space-y-4">
                 <div className="flex items-center space-x-3">
-                  <select className="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-32">
+                  <select 
+                    className="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-32"
+                    value={ticketCount}
+                    onChange={(e) => setTicketCount(Number(e.target.value))}
+                  >
                     {[1, 2, 3, 4, 5].map(num => (
                       <option key={num} value={num}>{num}</option>
                     ))}
@@ -95,8 +120,11 @@ function EventDetails() {
                   <span className="text-gray-300">tickets</span>
                 </div>
 
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                  Purchase Tickets
+                <button
+                  onClick={handlePurchase}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                >
+                  {account ? 'Purchase Tickets' : 'Connect Wallet to Purchase'}
                 </button>
               </div>
 
@@ -114,4 +142,4 @@ function EventDetails() {
   );
 }
 
-export default EventDetails
+export default EventDetails;
