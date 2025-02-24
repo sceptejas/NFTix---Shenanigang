@@ -31,8 +31,8 @@ function Navbar() {
               </button>
             )}
             <Link to="/events" className="flex items-center space-x-2">
-              <img src="https://i.imgur.com/C2cutQL.png" alt="NFTix Logo" className="w-7 h-7 sm:w-8 sm:h-8" />
-              <span className="text-lg sm:text-xl font-bold text-white font-montserrat">NFTix</span>
+              <img src="https://i.imgur.com/TgdLja5.png" alt="NFTix Logo" className="w-7 h-7 sm:w-8 sm:h-8" />
+              <span className="text-lg sm:text-xl font-bold text-white font-montserrat">SFTix</span>
             </Link>
           </div>
           
