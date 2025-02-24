@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Calendar, MapPin, Users, Clock, Info, Tag } from 'lucide-react';
 import { useWallet } from '../hooks/useWallet';
 import { useEvents } from '../hooks/useEvents';
+import { useContract } from '../hooks/useContract';
 import { toast } from 'react-hot-toast';
 
 function EventDetails() {
