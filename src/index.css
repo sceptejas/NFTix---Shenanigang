@@ -14,7 +14,7 @@
 }
 
 .dropdown-menu {
-  @apply absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none;
+  @apply absolute right-0 mt-2 w-72 rounded-lg shadow-lg py-1 bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none;
   transform-origin: top right;
   animation: dropdown 0.2s ease-out;
 }

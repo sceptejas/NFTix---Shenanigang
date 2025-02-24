@@ -25,29 +25,59 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const checkConnection = async () => {
-      if (window.ethereum) {
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        if (accounts.length > 0) {
-          const newProvider = new ethers.BrowserProvider(window.ethereum);
-          const newSigner = await newProvider.getSigner();
-          setAccount(accounts[0]);
-          setProvider(newProvider);
-          setSigner(newSigner);
+      try {
+        if (typeof window.ethereum !== 'undefined') {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts.length > 0) {
+            const newProvider = new ethers.BrowserProvider(window.ethereum);
+            const newSigner = await newProvider.getSigner();
+            setAccount(accounts[0]);
+            setProvider(newProvider);
+            setSigner(newSigner);
+          }
         }
+      } catch (error) {
+        console.error('Error checking wallet connection:', error);
       }
     };
 
     checkConnection();
+
+    // Listen for account changes
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts: string[]) => {
+        if (accounts.length > 0) {
+          setAccount(accounts[0]);
+        } else {
+          disconnectWallet();
+        }
+      });
+
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+    }
+
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeAllListeners();
+      }
+    };
   }, []);
 
   const connectWallet = async () => {
-    if (!window.ethereum) {
+    if (typeof window.ethereum === 'undefined') {
       toast.error('Please install MetaMask to use this feature!');
+      window.open('https://metamask.io/download/', '_blank');
       return;
     }
 
     try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      // Request account access
+      const accounts = await window.ethereum.request({ 
+        method: 'eth_requestAccounts' 
+      });
+      
       const newProvider = new ethers.BrowserProvider(window.ethereum);
       const newSigner = await newProvider.getSigner();
       
@@ -56,9 +86,13 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       setSigner(newSigner);
       
       toast.success('Wallet connected successfully!');
-    } catch (error) {
-      toast.error('Failed to connect wallet. Please try again.');
-      console.error('Error connecting wallet:', error);
+    } catch (error: any) {
+      if (error.code === 4001) {
+        toast.error('Please connect to MetaMask.');
+      } else {
+        toast.error('Failed to connect wallet. Please try again.');
+        console.error('Error connecting wallet:', error);
+      }
     }
   };
 
