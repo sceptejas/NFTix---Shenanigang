@@ -9,7 +9,7 @@ function Landing() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
       <div className="text-center space-y-8 px-4">
         <img 
-          src="https://i.imgur.com/C2cutQL.png" 
+          src="https://i.imgur.com/TgdLja5.png" 
           alt="NFTix Logo" 
           className="w-32 h-32 mx-auto animate-float"
         />
