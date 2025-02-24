@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
-import { useWallet } from './useWallet';
-import TicketingSFTAbi from '../contracts/TicketingSFT.json';
-import { toast } from 'react-hot-toast';
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import { useWallet } from "./useWallet";
+import TicketingSFTAbi from "../contracts/TicketingSFT.json";
+import { toast } from "react-hot-toast";
 
-const CONTRACT_ADDRESS = ''; // TODO: Add your deployed contract address
+const CONTRACT_ADDRESS = ""; // TODO: Add your deployed contract address
 
 export function useContract() {
   const { signer, provider } = useWallet();
@@ -28,7 +28,7 @@ export function useContract() {
     maxResalePrice: string
   ) => {
     if (!contract) {
-      toast.error('Please connect your wallet');
+      toast.error("Please connect your wallet");
       return;
     }
 
@@ -44,17 +44,21 @@ export function useContract() {
       );
       await tx.wait();
 
-      toast.success('Event created successfully!');
+      toast.success("Event created successfully!");
       return tx;
-    } catch (error: any) {
-      console.error('Error creating event:', error);
-      toast.error(error.message || 'Failed to create event');
+    } catch (error: unknown) {
+      console.error("Error creating event:", error);
+      toast.error(error.message || "Failed to create event");
     }
   };
 
-  const purchaseTicket = async (eventId: number, amount: number, price: string) => {
+  const purchaseTicket = async (
+    eventId: number,
+    amount: number,
+    price: string
+  ) => {
     if (!contract) {
-      toast.error('Please connect your wallet');
+      toast.error("Please connect your wallet");
       return;
     }
 
@@ -65,11 +69,11 @@ export function useContract() {
       });
       await tx.wait();
 
-      toast.success('Tickets purchased successfully!');
+      toast.success("Tickets purchased successfully!");
       return tx;
-    } catch (error: any) {
-      console.error('Error purchasing ticket:', error);
-      toast.error(error.message || 'Failed to purchase ticket');
+    } catch (error: unknown) {
+      console.error("Error purchasing ticket:", error);
+      toast.error(error.message || "Failed to purchase ticket");
     }
   };
 
@@ -79,20 +83,24 @@ export function useContract() {
     price: string
   ) => {
     if (!contract) {
-      toast.error('Please connect your wallet');
+      toast.error("Please connect your wallet");
       return;
     }
 
     try {
       const priceInWei = ethers.parseEther(price);
-      const tx = await contract.listTicketForResale(eventId, tokenId, priceInWei);
+      const tx = await contract.listTicketForResale(
+        eventId,
+        tokenId,
+        priceInWei
+      );
       await tx.wait();
 
-      toast.success('Ticket listed for resale!');
+      toast.success("Ticket listed for resale!");
       return tx;
-    } catch (error: any) {
-      console.error('Error listing ticket:', error);
-      toast.error(error.message || 'Failed to list ticket');
+    } catch (error: unknown) {
+      console.error("Error listing ticket:", error);
+      toast.error(error.message || "Failed to list ticket");
     }
   };
 
@@ -103,7 +111,7 @@ export function useContract() {
     price: string
   ) => {
     if (!contract) {
-      toast.error('Please connect your wallet');
+      toast.error("Please connect your wallet");
       return;
     }
 
@@ -114,11 +122,11 @@ export function useContract() {
       });
       await tx.wait();
 
-      toast.success('Resale ticket purchased successfully!');
+      toast.success("Resale ticket purchased successfully!");
       return tx;
-    } catch (error: any) {
-      console.error('Error purchasing resale ticket:', error);
-      toast.error(error.message || 'Failed to purchase resale ticket');
+    } catch (error: unknown) {
+      console.error("Error purchasing resale ticket:", error);
+      toast.error(error.message || "Failed to purchase resale ticket");
     }
   };
 
@@ -136,7 +144,7 @@ export function useContract() {
         isActive: event.isActive,
       };
     } catch (error) {
-      console.error('Error fetching event details:', error);
+      console.error("Error fetching event details:", error);
       return null;
     }
   };
